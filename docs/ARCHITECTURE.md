@@ -147,7 +147,10 @@ Deletion order: DB transaction first, then files. An orphan sweep at startup rem
 
 * `StreakWidgetReceiver` (`AppWidgetProvider`) reads `ActivityRepository.currentStreak()` — the same
   session aggregate as the Activity screen — on a background coroutine under `goAsync()` and pushes
-  `RemoteViews` (clover + number; a horizontal layout when resized wide).
+  `RemoteViews`: the clover (`logo.png`), a fixed two-line label ("Your" / "Reading Strike") and the
+  streak number. On Android 12+ a size-mapped `RemoteViews` lets the launcher choose between that
+  layout and a compact clover-and-number layout for instances narrower than 170 dp (e.g. 1×1 widgets
+  placed by an earlier version). Older Android versions choose from the reported widget width.
 * Update triggers: the system update broadcast (placement, boot, `updatePeriodMillis = 30 min`),
   `TIMEZONE_CHANGED` / `TIME_SET`, and — while the app process is alive — every emission of the
   live streak `Flow` (session flushes, a day first qualifying, midnight roll-over), coalesced to at

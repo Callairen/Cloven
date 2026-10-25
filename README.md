@@ -10,7 +10,7 @@ tracker and a compact clover-and-streak home-screen widget.
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the technical design,
 [docs/CHECKLIST.md](docs/CHECKLIST.md) for feature/test status and known limitations, and
-[docs/LOGO.md](docs/LOGO.md) for the (placeholder) logo assets.
+[docs/LOGO.md](docs/LOGO.md) for the logo assets and how they are packaged.
 
 ## Requirements
 
@@ -74,7 +74,9 @@ can update the other.
 ### Adding the widget
 
 Long-press the home screen → *Widgets* → *Cloven* → drag **Cloven streak** onto the home
-screen. It shows the clover and your current streak; tapping it opens Reading Activity.
+screen (3×1 by default). It shows the clover, the label "Your / Reading Strike" and your current
+streak; tapping it opens Reading Activity. If it is resized narrower than about 170 dp, it shows
+just the clover and the number.
 
 ## Using Cloven
 
@@ -103,4 +105,6 @@ app/src/main/java/app/cloven/
 app/src/test/         JVM unit tests
 app/src/androidTest/  instrumented tests (Room, PDF import, preferences, widget)
 app/schemas/          exported Room schema (for migrations)
+branding/source/      original logo artwork (unmodified)
+tools/                generate_brand_assets.py (packaged icons/logos from branding/source)
 ```

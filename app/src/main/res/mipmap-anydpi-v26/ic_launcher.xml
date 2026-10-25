@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from branding/source/icon.png by tools/generate_brand_assets.py.
+     The background matches icon.png's own cream so the margin around the scaled artwork is seamless.
+     minSdk is 26, so every supported device uses this adaptive icon; no legacy PNG icons are needed.
+     No <monochrome> layer: icon.png is opaque, and a themed silhouette would need separate artwork. -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@color/buttercream" />
-    <foreground android:drawable="@drawable/ic_launcher_foreground" />
-    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+    <background android:drawable="@color/launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
 </adaptive-icon>

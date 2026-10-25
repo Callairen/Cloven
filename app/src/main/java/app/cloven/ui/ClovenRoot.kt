@@ -2,6 +2,7 @@ package app.cloven.ui
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocalLibrary
 import androidx.compose.material.icons.outlined.Settings
@@ -81,7 +82,8 @@ fun ClovenRoot(container: AppContainer, requestedDestination: String?, onDestina
                             onClick = { nav.navigateTopLevel(item.route) },
                             icon = {
                                 if (item.icon != null) Icon(item.icon, contentDescription = null)
-                                else Icon(painterResource(R.drawable.cloven_logo), contentDescription = null)
+                                // Bitmap painters report their pixel size, so the standard 24dp is set explicitly.
+                                else Icon(painterResource(R.drawable.logo), contentDescription = null, modifier = Modifier.size(24.dp))
                             },
                             label = { Text(item.label) },
                             colors = NavigationBarItemDefaults.colors(

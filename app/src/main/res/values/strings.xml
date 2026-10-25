@@ -3,4 +3,7 @@
     <string name="app_name">Cloven</string>
     <string name="widget_label">Cloven streak</string>
     <string name="widget_description">Your current reading streak</string>
+    <!-- Widget label, shown on two fixed lines. -->
+    <string name="widget_line_your">Your</string>
+    <string name="widget_line_title">Reading Strike</string>
 </resources>

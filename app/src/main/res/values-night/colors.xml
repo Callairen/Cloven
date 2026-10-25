@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="window_background">#FF1B221D</color>
-    <color name="clover_mark">#FF9CC198</color>
     <color name="widget_surface">#FF243028</color>
     <color name="widget_text">#FFF1E6CC</color>
+    <color name="widget_text_secondary">#FFC8C2AC</color>
     <color name="widget_outline">#FF2F3E35</color>
 </resources>

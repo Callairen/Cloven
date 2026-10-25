@@ -44,7 +44,7 @@ Verification environment: Android Emulator, API 35 (Google APIs, x86_64, 1080×2
 | Current / longest streak, qualifying days, reset, time-zone anchor | ✅ | `StreakCalculatorTest` (15) |
 | Daily goal configurable, separate from 5-min threshold | ✅ | `ActivityRepositoryTest`; Settings UI on emulator |
 | Activity screen with 7-day history | ✅ | Emulator (0 → 2 → 3 days with seeded history) |
-| Widget: clover + streak from Room, nothing else | ✅ | `StreakWidgetTest` (4); emulator |
+| Widget: clover (`logo.png`) + "Your / Reading Strike" + streak from Room | ✅ | `StreakWidgetTest` (6); emulator (3×1 placed, 1×1 compact fallback) |
 | Widget refreshes when today qualifies | ✅ | Emulator: changed 2 → 3 after crossing 5 min |
 | Widget after process death + device reboot | ✅ | Emulator: showed 3 after reboot without opening the app |
 | Widget tap opens Activity | ✅ | Emulator |
@@ -63,7 +63,8 @@ Verification environment: Android Emulator, API 35 (Google APIs, x86_64, 1080×2
 * ⏸ Layout-based pagination (scroll-based reading is used).
 * ⏸ Configurable streak threshold (fixed at 5 minutes, documented in-app).
 * ⏸ Encrypted storage, export/import of reading history.
-* ❌ **Official Cloven logo — not supplied.** A placeholder clover is used everywhere (docs/LOGO.md).
+* ✅ Official artwork integrated (2026-10-25): `inapp_logo` in the Library header, `logo.png` for the
+  widget and compact clover, `icon.png` as the launcher icon (docs/LOGO.md).
 
 ## Known limitations
 * Text extraction follows the PDF's content order: complex multi-column layouts, tables, footnotes
@@ -95,3 +96,17 @@ Verification environment: Android Emulator, API 35 (Google APIs, x86_64, 1080×2
 6. Observed once, not reproduced: the library's Continue Reading card showed 0 % after the very first
    reading session although the position had been saved. A clean first-open retest showed the correct
    value immediately. Left documented, not claimed fixed.
+
+## Branding revision (2026-10-25)
+1. Root cause of the "plain square" logo: `CloverMark` and the Activity tab drew the new opaque
+   `cloven_logo.png` through Compose `Icon(tint = …)`, which recolours every non-transparent pixel.
+   It was fixed by drawing the transparent `logo.png` untinted by default.
+2. Header → `inapp_logo` image + tagline (the artwork has no tagline). Launcher → adaptive icon
+   generated from `icon.png`. Widget → `logo.png` + two-line label + streak, with a compact fallback.
+3. Verified on the API 35 emulator: header (light and dark), drawer icon, splash icon, widget picker
+   preview, a newly placed 3×1 widget, an existing 1×1 widget after an app update, and a cold boot.
+   `./gradlew testDebugUnitTest`: 79/79. `connectedDebugAndroidTest`: 24/24. Release build: OK.
+4. Found and fixed during verification: the Activity tab icon rendered ~140 dp tall (a bitmap's
+   intrinsic size) until it was given an explicit 24 dp; an existing 1×1 widget lost its number after the
+   update, which led to the size-mapped compact layout.
+5. Not verified on the physical POCO F5: the phone was locked at the time.

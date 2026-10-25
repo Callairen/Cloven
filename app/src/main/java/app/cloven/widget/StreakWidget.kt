@@ -7,7 +7,9 @@ import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.SizeF
 import android.widget.RemoteViews
 import app.cloven.MainActivity
 import app.cloven.R
@@ -19,7 +21,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 /**
- * Compact home-screen widget: the clover mark and the current streak — nothing else.
+ * Home-screen widget: the standalone clover (logo.png), a fixed two-line label
+ * ("Your" / "Reading Strike") and the current streak number.
  *
  * Implemented with plain RemoteViews so each update renders synchronously inside the update
  * broadcast. (A Glance version was tried first; after a reboot its WorkManager-backed render
@@ -28,18 +31,33 @@ import kotlinx.coroutines.launch
  */
 object StreakWidget {
 
-    /** Widgets at least this wide (and wider than tall) show the clover beside the number. */
-    private const val WIDE_MIN_WIDTH_DP = 100
+    /** Narrower instances (e.g. a 1×1 widget placed by an older version) use the compact layout. */
+    const val LABEL_MIN_WIDTH_DP = 170
 
     fun contentDescription(streak: Int): String =
-        if (streak == 1) "Cloven reading streak: 1 day" else "Cloven reading streak: $streak days"
+        if (streak == 1) "Your reading streak: 1 day" else "Your reading streak: $streak days"
 
-    fun buildViews(context: Context, streak: Int, options: Bundle?): RemoteViews {
-        val minWidth = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) ?: 0
-        val maxHeight = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT) ?: 0
-        val wide = minWidth >= WIDE_MIN_WIDTH_DP && (maxHeight == 0 || minWidth > maxHeight * 1.3f)
-        val layout = if (wide) R.layout.widget_streak_wide else R.layout.widget_streak
-        return RemoteViews(context.packageName, layout).apply {
+    /**
+     * On Android 12+ both layouts are handed to the launcher keyed by size, and the launcher picks
+     * the one that fits the widget's real size (no dependency on size options, which can still be
+     * empty right after boot). Older versions choose from [widthDp]; 0 (unknown) gets the full layout.
+     */
+    fun buildViews(context: Context, streak: Int, widthDp: Int = 0): RemoteViews =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            RemoteViews(
+                mapOf(
+                    SizeF(40f, 40f) to layout(context, streak, compact = true),
+                    SizeF(LABEL_MIN_WIDTH_DP.toFloat(), 40f) to layout(context, streak, compact = false),
+                ),
+            )
+        } else {
+            layout(context, streak, compact = widthDp in 1 until LABEL_MIN_WIDTH_DP)
+        }
+
+    /** One concrete layout: the full "Your / Reading Strike" row, or the compact clover-and-number. */
+    fun layout(context: Context, streak: Int, compact: Boolean): RemoteViews {
+        val id = if (compact) R.layout.widget_streak_compact else R.layout.widget_streak
+        return RemoteViews(context.packageName, id).apply {
             setTextViewText(R.id.widget_streak, streak.toString())
             setContentDescription(R.id.widget_root, contentDescription(streak))
             setOnClickPendingIntent(R.id.widget_root, openActivityIntent(context))
@@ -57,7 +75,10 @@ object StreakWidget {
     fun pushToAll(context: Context, streak: Int) {
         val manager = AppWidgetManager.getInstance(context)
         val ids = manager.getAppWidgetIds(ComponentName(context, StreakWidgetReceiver::class.java))
-        ids.forEach { id -> manager.updateAppWidget(id, buildViews(context, streak, manager.getAppWidgetOptions(id))) }
+        ids.forEach { id ->
+            val width = manager.getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+            manager.updateAppWidget(id, buildViews(context, streak, width))
+        }
     }
 }
 
@@ -65,6 +86,7 @@ class StreakWidgetReceiver : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) = refresh(context)
 
+    /** Resizing can cross the compact/label threshold. */
     override fun onAppWidgetOptionsChanged(context: Context, manager: AppWidgetManager, id: Int, options: Bundle) =
         refresh(context)
 

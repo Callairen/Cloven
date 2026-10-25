@@ -47,18 +47,18 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
- * The Cloven clover mark (currently the placeholder asset, see docs/LOGO.md). Tinted from the
- * Compose theme rather than resource qualifiers, so it stays legible when the in-app theme
- * differs from the system's light/dark mode.
+ * The standalone clover (logo.png, see docs/LOGO.md), drawn in its original colours.
+ * Pass [tint] only for a single-colour silhouette; that works because the artwork has a
+ * transparent background (tinting an opaque image would fill its whole square).
  */
 @Composable
 fun CloverMark(modifier: Modifier = Modifier, size: Dp = 28.dp, tint: Color? = null, contentDescription: String? = null) {
-    Icon(
-        painterResource(R.drawable.cloven_logo),
-        contentDescription,
-        modifier.size(size),
-        tint = tint ?: LocalClovenExtras.current.brandMark,
-    )
+    val painter = painterResource(R.drawable.logo)
+    if (tint != null) {
+        Icon(painter, contentDescription, modifier.size(size), tint = tint)
+    } else {
+        Image(painter, contentDescription, modifier.size(size), contentScale = ContentScale.Fit)
+    }
 }
 
 /** Rounded progress bar with an accessible range description. */

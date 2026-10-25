@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- updatePeriodMillis: 30 minutes is the platform minimum; it lets a missed day show up
+<!-- 180dp minimum width (3 cells on most launchers) fits the clover, the two-line
+     "Your / Reading Strike" label and the streak number without wrapping.
+     updatePeriodMillis: 30 minutes is the platform minimum; it lets a missed day show up
      shortly after midnight even if Cloven is not opened. Android may delay it further. -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/widget_description"
-    android:initialLayout="@layout/widget_streak_wide"
-    android:minWidth="110dp"
+    android:initialLayout="@layout/widget_streak"
+    android:minWidth="180dp"
     android:minHeight="40dp"
-    android:minResizeWidth="110dp"
+    android:minResizeWidth="180dp"
     android:minResizeHeight="40dp"
-    android:maxResizeWidth="220dp"
-    android:maxResizeHeight="120dp"
-    android:previewImage="@drawable/cloven_logo"
-    android:previewLayout="@layout/widget_streak_wide"
-    android:resizeMode="horizontal|vertical"
-    android:targetCellWidth="2"
+    android:targetCellWidth="3"
     android:targetCellHeight="1"
+    android:maxResizeWidth="320dp"
+    android:maxResizeHeight="120dp"
+    android:previewImage="@drawable/logo"
+    android:previewLayout="@layout/widget_streak"
+    android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen" />

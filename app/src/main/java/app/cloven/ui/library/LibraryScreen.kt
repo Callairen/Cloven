@@ -4,6 +4,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import app.cloven.R
+import app.cloven.ui.theme.ClovenColors
+import app.cloven.ui.theme.LocalClovenExtras
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -77,7 +83,6 @@ import app.cloven.data.pdf.ImportProgress
 import app.cloven.data.pdf.ImportState
 import app.cloven.domain.LibraryFilter
 import app.cloven.ui.components.BookCover
-import app.cloven.ui.components.CloverMark
 import app.cloven.ui.components.MessageState
 import app.cloven.ui.components.ProgressLine
 import app.cloven.ui.theme.Literata
@@ -211,15 +216,37 @@ private fun LazyGridScope.fullWidth(key: String, content: @Composable () -> Unit
     item(key = key, span = { GridItemSpan(maxLineSpan) }) { content() }
 }
 
+/**
+ * Brand header: the combined logo + wordmark (inapp_logo.png) as a single image. The supplied
+ * artwork has no tagline, so the tagline is the only separately rendered text.
+ */
 @Composable
 private fun LibraryHeader() {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp)) {
-        CloverMark(size = 34.dp)
-        Spacer(Modifier.width(10.dp))
-        Column {
-            Text("Cloven", style = MaterialTheme.typography.headlineSmall, modifier = Modifier.semantics { heading() })
-            Text("Your quiet little library", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
+    val wordmark = painterResource(R.drawable.inapp_logo)
+    // The wordmark's letters are dark forest green on transparency; on the dark theme they sit on a
+    // buttercream plate so they stay legible without altering the artwork.
+    val plate = if (LocalClovenExtras.current.isDark) {
+        Modifier.clip(RoundedCornerShape(14.dp)).background(ClovenColors.Buttercream).padding(horizontal = 10.dp, vertical = 4.dp)
+    } else {
+        Modifier
+    }
+    Column(Modifier.padding(top = 4.dp)) {
+        Image(
+            painter = wordmark,
+            contentDescription = "Cloven",
+            contentScale = ContentScale.Fit,
+            modifier = plate
+                .height(44.dp)
+                .aspectRatio(wordmark.intrinsicSize.width / wordmark.intrinsicSize.height)
+                .semantics { heading() },
+        )
+        Text(
+            "Your quiet little library",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            // Lines the text up with the wordmark's "C" (the artwork has a small transparent margin).
+            modifier = Modifier.padding(start = 5.dp, top = 2.dp),
+        )
     }
 }
 
