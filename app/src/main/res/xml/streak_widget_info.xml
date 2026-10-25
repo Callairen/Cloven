@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- updatePeriodMillis: 30 minutes is the platform minimum; it lets a missed day show up
+     shortly after midnight even if Cloven is not opened. Android may delay it further. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/widget_streak"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:minResizeWidth="40dp"
+    android:minResizeHeight="40dp"
+    android:targetCellWidth="1"
+    android:targetCellHeight="1"
+    android:maxResizeWidth="220dp"
+    android:maxResizeHeight="120dp"
+    android:previewImage="@drawable/cloven_logo"
+    android:previewLayout="@layout/widget_streak"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

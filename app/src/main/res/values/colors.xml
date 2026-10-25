@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand tokens (see ui/theme/Color.kt for the full design system) -->
+    <color name="buttercream">#FFFFF1D2</color>
+    <color name="oat_beige">#FFE9DAB6</color>
+    <color name="soft_sage">#FFBFD0B3</color>
+    <color name="botanical_green">#FF7F9C86</color>
+    <color name="forest_charcoal">#FF2F3E35</color>
+    <color name="clover_green">#FF588157</color>
+
+    <!-- Theme-dependent (overridden in values-night) -->
+    <color name="window_background">#FFFFF1D2</color>
+    <color name="clover_mark">#FF588157</color>
+    <color name="widget_surface">#FFFFF1D2</color>
+    <color name="widget_text">#FF2F3E35</color>
+    <color name="widget_outline">#FFE9DAB6</color>
+</resources>
