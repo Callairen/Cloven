@@ -22,7 +22,7 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the technical design,
 | JDK for Gradle | 17–25 (built with the JetBrains Runtime 25 bundled in Android Studio) |
 | Gradle | 9.8.2 (wrapper included) |
 | Android Gradle Plugin | 9.4.1 |
-| Kotlin | 2.4.21 (AGP built-in Kotlin) + KSP 2.3.12 |
+| Kotlin | 2.0.21 + KSP 2.0.21-1.0.28 |
 
 Key libraries: Compose BOM 2026.09.00 (Material 3 1.4), Room 2.8.5, DataStore 1.3.0,
 Navigation Compose 2.10.2, PdfBox-Android 2.0.27.0. The widget uses plain `RemoteViews`. Versions live in
